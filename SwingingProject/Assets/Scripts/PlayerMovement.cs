@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public int jumpMax = 2;
     int jumpOn = 0;
     bool anotherJump = true;
+    float vel;
 
     void Awake()
     {
@@ -28,23 +29,32 @@ public class PlayerMovement : MonoBehaviour
     {
         if (anotherJump)
         {
+            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(vel, 0, 0);
             gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
             Debug.Log("jumped");
             jumpOn++;
-        }
 
-        if (jumpOn >= jumpMax)
-        {
-            anotherJump = false;
-            jumpOn = 0;
-        }
 
+            if (jumpOn >= jumpMax)
+            {
+                anotherJump = false;
+                jumpOn = 0;
+            }
+
+        }
     }
 
     private void Update()
     {
-        Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * walkSpeed;
+        float speedMod = 1;
+        if (onGround)
+        {
+            speedMod = walkSpeed;
+        }
+        Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * speedMod;
         transform.Translate(m, Space.World);
+        vel = m.x/Time.deltaTime;
+        Debug.Log(vel);
     }
 
     private void OnEnable()
