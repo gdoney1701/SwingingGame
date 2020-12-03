@@ -15,11 +15,13 @@ public class PlayerMovement : MonoBehaviour
     int jumpOn = 0;
     bool anotherJump = true;
     float vel;
+    public Rigidbody playerBod;
 
     void Awake()
     {
+        
         controls = new PlayerControls();
-
+        ResetGravity();
         controls.Movement.Jump.performed += ctx => Jump();
         controls.Movement.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Movement.Move.canceled += ctx => move = Vector2.zero;
@@ -29,7 +31,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (anotherJump)
         {
-            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sqrt(vel), jumpRange, 0);
+            playerBod.drag = 2;
+            ResetGravity();
+
+            playerBod.velocity = new Vector3(vel/2, jumpRange, 0);
             //gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
             Debug.Log("jumped");
             jumpOn++;
@@ -47,7 +52,8 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator FallHandle()
     {
         yield return new WaitForSeconds(.5f);
-        Physics.gravity = new Vector3(0, -20, 0);
+        playerBod.drag = 0;
+        Physics.gravity = new Vector3(0, -30, 0);
     }
 
     private void Update()
@@ -60,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * speedMod;
         transform.Translate(m, Space.World);
         vel = m.x/Time.deltaTime;
-        Debug.Log(vel);
+        Debug.Log(Physics.gravity);
     }
 
     private void OnEnable()
@@ -94,5 +100,11 @@ public class PlayerMovement : MonoBehaviour
         jumpOn = 0;
         anotherJump = true;
         Debug.Log("Wompf");
+        playerBod.drag = 2;
+        ResetGravity();
+    }
+    void ResetGravity()
+    {
+        Physics.gravity = new Vector3(0, -20, 0);
     }
 }
