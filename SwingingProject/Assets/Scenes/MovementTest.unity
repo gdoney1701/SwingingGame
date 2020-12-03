@@ -432,8 +432,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 446040994}
   serializedVersion: 2
-  m_Mass: 5
-  m_Drag: 0
+  m_Mass: 10
+  m_Drag: 2
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0bb74f7f7e969e458d5ab7daf019962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpRange: 2000
+  jumpRange: 20
   walkSpeed: 10
   onGround: 1
   jumpMax: 2

@@ -29,10 +29,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (anotherJump)
         {
-            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(vel, 0, 0);
-            gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
+            gameObject.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sqrt(vel), jumpRange, 0);
+            //gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
             Debug.Log("jumped");
             jumpOn++;
+            StartCoroutine(FallHandle());
 
 
             if (jumpOn >= jumpMax)
@@ -43,10 +44,15 @@ public class PlayerMovement : MonoBehaviour
 
         }
     }
+    IEnumerator FallHandle()
+    {
+        yield return new WaitForSeconds(.5f);
+        Physics.gravity = new Vector3(0, -20, 0);
+    }
 
     private void Update()
     {
-        float speedMod = 1;
+        float speedMod = walkSpeed * 0.75f;
         if (onGround)
         {
             speedMod = walkSpeed;
