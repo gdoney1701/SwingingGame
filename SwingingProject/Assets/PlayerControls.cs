@@ -41,6 +41,22 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""FireHook"",
+                    ""type"": ""Button"",
+                    ""id"": ""7ad9b479-e005-470a-ab62-74ae11f16cec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold""
+                },
+                {
+                    ""name"": ""GroundPound"",
+                    ""type"": ""Button"",
+                    ""id"": ""e479a381-402d-4092-899c-5384bb442e8b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -76,6 +92,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65be42a8-e7f8-45ec-967b-7d6f71688df1"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FireHook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e66c9a89-8d13-4fe0-b9ae-f2d24c7dcfd7"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GroundPound"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -87,6 +125,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
         m_Movement_Aim = m_Movement.FindAction("Aim", throwIfNotFound: true);
         m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
+        m_Movement_FireHook = m_Movement.FindAction("FireHook", throwIfNotFound: true);
+        m_Movement_GroundPound = m_Movement.FindAction("GroundPound", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -139,6 +179,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Movement_Move;
     private readonly InputAction m_Movement_Aim;
     private readonly InputAction m_Movement_Jump;
+    private readonly InputAction m_Movement_FireHook;
+    private readonly InputAction m_Movement_GroundPound;
     public struct MovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -146,6 +188,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Movement_Move;
         public InputAction @Aim => m_Wrapper.m_Movement_Aim;
         public InputAction @Jump => m_Wrapper.m_Movement_Jump;
+        public InputAction @FireHook => m_Wrapper.m_Movement_FireHook;
+        public InputAction @GroundPound => m_Wrapper.m_Movement_GroundPound;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -164,6 +208,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnJump;
+                @FireHook.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireHook;
+                @FireHook.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireHook;
+                @FireHook.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnFireHook;
+                @GroundPound.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
+                @GroundPound.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
+                @GroundPound.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -177,6 +227,12 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @FireHook.started += instance.OnFireHook;
+                @FireHook.performed += instance.OnFireHook;
+                @FireHook.canceled += instance.OnFireHook;
+                @GroundPound.started += instance.OnGroundPound;
+                @GroundPound.performed += instance.OnGroundPound;
+                @GroundPound.canceled += instance.OnGroundPound;
             }
         }
     }
@@ -186,5 +242,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnFireHook(InputAction.CallbackContext context);
+        void OnGroundPound(InputAction.CallbackContext context);
     }
 }
