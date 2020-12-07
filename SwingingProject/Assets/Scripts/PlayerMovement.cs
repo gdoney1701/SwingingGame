@@ -30,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
-        
         controls = new PlayerControls();
         ResetGravity();
         controls.Movement.Jump.performed += ctx => Jump();
@@ -41,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         controls.Movement.Move.canceled += ctx => move = Vector2.zero;
 
         controls.Movement.Aim.performed += ctx => aim = ctx.ReadValue<Vector2>();
-        controls.Movement.Aim.canceled += ctx => aim = Vector2.zero;
+        //controls.Movement.Aim.canceled += ctx => aim = Vector2.zero;
 
         
     }
@@ -94,8 +93,11 @@ public class PlayerMovement : MonoBehaviour
             if (Vector2.Dot(aim,headingV2) > cone)
             {
                 Debug.Log("Target Locked");
-                
-                break;
+                GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
+                hookSpawn.GetComponent<HookHandler>().attackVector = headingV2;
+                hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
+                hookAround = true;
+
             }
         }
     }
