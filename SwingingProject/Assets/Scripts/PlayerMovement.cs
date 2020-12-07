@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     public int hookVel;
     public bool hookAround = false;
 
+    public List<GameObject> localTargets = new List<GameObject>();
+    public float targetArc = 30f;
+
     void Awake()
     {
         
@@ -76,9 +79,25 @@ public class PlayerMovement : MonoBehaviour
 
     void HookShot()
     {
-        GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-        hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(aim.x, aim.y, 0) * hookVel;
-        hookAround = true;
+        //GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
+        //hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(aim.x, aim.y, 0) * hookVel;
+        //hookAround = true;
+
+        for(int i =0; i<localTargets.Count; i++)
+        {
+
+            GameObject targetCheck = localTargets[i];
+            var heading = (targetCheck.transform.position - gameObject.transform.position);
+            var cone = Mathf.Cos(targetArc * Mathf.Deg2Rad);
+
+            if(Vector2.Dot(aim,heading) > cone)
+            {
+                Debug.Log("Target Locked");
+                Debug.Log(cone);
+                Debug.Log(targetCheck);
+                break;
+            }
+        }
     }
     IEnumerator FallHandle()
     {
@@ -97,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * speedMod;
         transform.Translate(m, Space.World);
         vel = m.x/Time.deltaTime;
-        Debug.Log(Physics.gravity);
+        //Debug.Log(Physics.gravity);
     }
 
     private void OnEnable()
@@ -137,5 +156,17 @@ public class PlayerMovement : MonoBehaviour
     void ResetGravity()
     {
         Physics.gravity = new Vector3(0, -20, 0);
+    }
+    public void targetHandler(bool entering, GameObject targetDelta)
+    {
+        if (entering)
+        {
+            localTargets.Add(targetDelta);
+            Debug.Log(localTargets);
+        }
+        else
+        {
+            localTargets.Remove(targetDelta);
+        }
     }
 }
