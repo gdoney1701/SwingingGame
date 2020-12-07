@@ -559,7 +559,7 @@ MonoBehaviour:
   hookVel: 10
   hookAround: 0
   localTargets: []
-  targetArc: 10
+  targetArc: 30
 --- !u!1 &927167590
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,7 +626,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927167590}
-  m_LocalRotation: {x: 0.072379194, y: 0.0000000042903125, z: -3.11346e-10, w: 0.9973772}
+  m_LocalRotation: {x: 0.072379194, y: -0.000000004290314, z: 3.113461e-10, w: 0.9973772}
   m_LocalPosition: {x: -1.2972784, y: 3.0253978, z: -13.614038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -806,7 +806,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1246659507}
-  m_LocalRotation: {x: 0.072379194, y: 0.0000000042903125, z: -3.11346e-10, w: 0.9973772}
+  m_LocalRotation: {x: 0.072379194, y: -0.000000004290314, z: 3.113461e-10, w: 0.9973772}
   m_LocalPosition: {x: -1.2972784, y: 3.0253978, z: -13.614038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []

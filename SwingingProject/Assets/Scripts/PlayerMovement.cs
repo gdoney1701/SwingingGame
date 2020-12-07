@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public bool hookAround = false;
 
     public List<GameObject> localTargets = new List<GameObject>();
-    public float targetArc = 30f;
+    public float targetArc;
 
     void Awake()
     {
@@ -87,14 +87,14 @@ public class PlayerMovement : MonoBehaviour
         {
 
             GameObject targetCheck = localTargets[i];
-            var heading = (targetCheck.transform.position - gameObject.transform.position);
+            var heading = (targetCheck.transform.position - gameObject.transform.position).normalized;
+            Vector2 headingV2 = new Vector2(heading.x, heading.y);
             var cone = Mathf.Cos(targetArc * Mathf.Deg2Rad);
 
-            if(Vector2.Dot(aim,heading) > cone)
+            if (Vector2.Dot(aim,headingV2) > cone)
             {
                 Debug.Log("Target Locked");
-                Debug.Log(cone);
-                Debug.Log(targetCheck);
+                
                 break;
             }
         }
