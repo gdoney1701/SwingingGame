@@ -90,21 +90,21 @@ public class PlayerMovement : MonoBehaviour
             Vector2 headingV2 = new Vector2(heading.x, heading.y);
             var cone = Mathf.Cos(targetArc * Mathf.Deg2Rad);
             
-            Debug.DrawRay(gameObject.transform.position, heading, Color.cyan, 20);
+            //Debug.DrawRay(gameObject.transform.position, heading, Color.cyan, 20);
 
             if (Vector2.Dot(aim.normalized,headingV2) > cone)
             {
-                //Debug.Log("Target Locked");
-                //GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-                //hookSpawn.GetComponent<HookHandler>().attackVector = targetCheck.transform.position - gameObject.transform.position;
-                //hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
-                //hookAround = true;
-                Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
+                Debug.Log("Target Locked");
+                GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
+                hookSpawn.GetComponent<HookHandler>().attackVector = targetCheck.transform.position - gameObject.transform.position;
+                hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
+                hookAround = true;
+                //Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
 
             }
             else
             {
-                Debug.DrawRay(gameObject.transform.position, aim, Color.red, 20);
+                //Debug.DrawRay(gameObject.transform.position, aim, Color.red, 20);
             }
         }
     }
