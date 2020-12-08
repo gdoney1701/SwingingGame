@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     Vector2 move;
     Vector2 aim;
+    public Vector3 momentum;
     public float walkSpeed = 5;
     public bool onGround = true;
     public int jumpMax = 2;
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject hook;
     public int hookVel;
     public bool hookAround = false;
+    public bool onSwing = false;
 
     public List<GameObject> localTargets = new List<GameObject>();
     public float targetArc;
@@ -47,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
-        if (anotherJump)
+        if (anotherJump && !onSwing)
         {
             playerBod.drag = 2;
             ResetGravity();
@@ -70,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Pound()
     {
-        if (!onGround)
+        if (!onGround && !onSwing)
         {
             playerBod.velocity = new Vector3(0, downForce, 0);
         }
@@ -81,32 +83,35 @@ public class PlayerMovement : MonoBehaviour
         //GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
         //hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(aim.x, aim.y, 0) * hookVel;
         //hookAround = true;
-
-        for(int i =0; i<localTargets.Count; i++)
+        if (!hookAround)
         {
-
-            GameObject targetCheck = localTargets[i];
-            var heading = (targetCheck.transform.position - gameObject.transform.position).normalized;
-            Vector2 headingV2 = new Vector2(heading.x, heading.y);
-            var cone = Mathf.Cos(targetArc * Mathf.Deg2Rad);
-            
-            //Debug.DrawRay(gameObject.transform.position, heading, Color.cyan, 20);
-
-            if (Vector2.Dot(aim.normalized,headingV2) > cone)
+            for (int i = 0; i < localTargets.Count; i++)
             {
-                Debug.Log("Target Locked");
-                GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-                hookSpawn.GetComponent<HookHandler>().attackVector = targetCheck.transform.position - gameObject.transform.position;
-                hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
-                hookAround = true;
-                //Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
 
-            }
-            else
-            {
-                //Debug.DrawRay(gameObject.transform.position, aim, Color.red, 20);
+                GameObject targetCheck = localTargets[i];
+                var heading = (targetCheck.transform.position - gameObject.transform.position).normalized;
+                Vector2 headingV2 = new Vector2(heading.x, heading.y);
+                var cone = Mathf.Cos(targetArc * Mathf.Deg2Rad);
+
+                //Debug.DrawRay(gameObject.transform.position, heading, Color.cyan, 20);
+
+                if (Vector2.Dot(move.normalized, headingV2) > cone)
+                {
+                    Debug.Log("Target Locked");
+                    GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
+                    hookSpawn.GetComponent<HookHandler>().attackVector = targetCheck.transform.position - gameObject.transform.position;
+                    hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
+                    hookAround = true;
+                    //Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
+
+                }
+                else
+                {
+                    //Debug.DrawRay(gameObject.transform.position, aim, Color.red, 20);
+                }
             }
         }
+        
     }
     IEnumerator FallHandle()
     {
@@ -117,15 +122,28 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        float speedMod = walkSpeed * 0.75f;
-        if (onGround)
+        if (!onSwing)
         {
-            speedMod = walkSpeed;
+            float speedMod = walkSpeed * 0.75f;
+            if (onGround)
+            {
+                speedMod = walkSpeed;
+                momentum.y = 0;
+            }
+            else
+            {
+                momentum.y = playerBod.velocity.y;
+            }
+            Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * speedMod;
+            momentum.x = playerBod.velocity.x + (speedMod*move.normalized.x);
+            transform.Translate(m, Space.World);
+            vel = m.x * Time.deltaTime;
+            momentum.z = new Vector2(momentum.x, momentum.y).magnitude;
+
+
+            //Debug.Log(Physics.gravity);
         }
-        Vector2 m = new Vector2(move.x, 0) * Time.deltaTime * speedMod;
-        transform.Translate(m, Space.World);
-        vel = m.x/Time.deltaTime;
-        //Debug.Log(Physics.gravity);
+
     }
 
     private void OnEnable()
