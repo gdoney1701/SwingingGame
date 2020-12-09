@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     PlayerControls controls;
     public float jumpRange = 2;
 
-    Vector2 move;
+    public Vector2 move;
     Vector2 aim;
     public Vector3 momentum;
     public float walkSpeed = 5;

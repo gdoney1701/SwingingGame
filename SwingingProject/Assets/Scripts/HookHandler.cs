@@ -15,7 +15,8 @@ public class HookHandler : MonoBehaviour
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<PlayerMovement>().onSwing = true;
-        player.GetComponent<MomentumHandler>().StartSwinging(player.GetComponent<PlayerMovement>().momentum, attackVector.magnitude);
+        player.GetComponent<MomentumHandler>().StartSwinging(player.GetComponent<PlayerMovement>().momentum, attackVector.magnitude, 
+            new Vector2(collision.transform.position.x, collision.transform.position.y));
         //HingeJoint playerHinge = player.AddComponent<HingeJoint>();
         //HingeSetup(playerHinge, collision.gameObject);
 
