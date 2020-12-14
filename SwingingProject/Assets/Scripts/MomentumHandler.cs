@@ -27,8 +27,10 @@ public class MomentumHandler : MonoBehaviour
         radius = inputRad;
         GetComponent<Rigidbody>().useGravity = false;
         center = target;
-        Vector2 travel = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle))* radius;
-        angle = Mathf.Deg2Rad * Vector3.SignedAngle(transform.position, travel, center);
+
+        Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y+radius, 0);
+        angle = Mathf.Atan2(delta.y, delta.x);
+
         print("Angle is " + angle);
 
         swinging = true;
