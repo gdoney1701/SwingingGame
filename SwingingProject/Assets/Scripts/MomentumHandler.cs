@@ -7,64 +7,69 @@ public class MomentumHandler : MonoBehaviour
 {
     public Vector3 currentVel;
     bool swinging = false;
+    bool connected = false;
     float radius;
     float t = 0;
     float initAngle;
 
     public float angle;
-    Vector2 center;
+    Vector3 center;
     Vector2 playerMove;
+    float inputDot = 0;
 
     private void Awake()
     {
         playerMove = gameObject.GetComponent<PlayerMovement>().move;
 
     }
-    public void StartSwinging(Vector3 inputVel, float inputRad, Vector2 target)
+    public void StartSwinging(Vector3 inputVel, Vector2 inputRad, Vector3 target)
     {
 
         currentVel = inputVel;
-        radius = inputRad;
+        radius = inputRad.magnitude;
         GetComponent<Rigidbody>().useGravity = false;
+        //GetComponent<Rigidbody>().isKinematic = true;
         center = target;
 
         Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y+radius, 0);
         angle = Mathf.Atan2(delta.y, delta.x);
 
         print("Angle is " + angle);
+        inputDot = Vector3.Dot(inputVel.normalized, inputRad);
 
-        swinging = true;
+        connected = true;
     }
 
     private void Update()
     {
-        if (swinging)
+        if (connected)
         {
-            //float linVel = currentVel.z;
-            //float distanceMoved = linVel * Time.deltaTime;
-            //float theta = Mathf.Atan(distanceMoved/radius);
-            //print(Mathf.Cos(theta));
-            //print(Mathf.Sin(theta));
-            //Vector2 moveFrame = new Vector2(distanceMoved * Mathf.Cos(theta), distanceMoved * Mathf.Sin(theta));
-            //transform.Translate(moveFrame, Space.World);
-            //t += Time.deltaTime;
 
-
-            int clockMod = 0;
-            //clockwise motion if evaluates correctly, counterclockwise otherwise
-            if (currentVel.x > 0 && currentVel.y > 0 || currentVel.x < 0 && currentVel.y < 0)
+            Vector3 travel = new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0) * radius;
+            if (radius > 1)
             {
-                clockMod = 1;
+                float preRad = radius;
+                radius -= currentVel.z * Time.deltaTime * 0.1f;
+                currentVel *= 1 + (preRad - radius);
+            }
+
+            angle += currentVel.z * Time.deltaTime / radius;
+
+            if (swinging)
+            {
+                transform.position = center + travel;
             }
             else
             {
-                clockMod = -1;
+                Vector3 maintainSpeed = currentVel * Time.deltaTime;
+                transform.position = Vector3.Lerp(maintainSpeed + transform.position, center + travel, t);
+                t += Time.deltaTime;
+                if (t >= 1)
+                {
+                    swinging = true;
+                }
             }
-            radius -= currentVel.z * Time.deltaTime * 0.1f;
-            angle += currentVel.z * Time.deltaTime / radius * clockMod;
-            Vector2 travel = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle)) * radius;
-            transform.position = center + travel;
-
         }
+
     }
 }
