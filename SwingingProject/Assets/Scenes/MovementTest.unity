@@ -551,6 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpRange: 20
+  move: {x: 0, y: 0}
   momentum: {x: 0, y: 0, z: 0}
   walkSpeed: 10
   onGround: 1
@@ -576,6 +577,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentVel: {x: 0, y: 0, z: 0}
+  swinging: 0
+  connected: 0
+  radius: 0
+  angle: 0
+  maxSpeed: 20
 --- !u!1 &635750568
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +760,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927167590}
-  m_LocalRotation: {x: 0.072379194, y: -0.000000004290314, z: 3.113461e-10, w: 0.9973772}
+  m_LocalRotation: {x: 0.072379164, y: 0.0011223024, z: -0.00008144497, w: 0.99737656}
   m_LocalPosition: {x: -1.2972784, y: 3.0253978, z: -13.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -807,9 +813,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 1
+  m_BindingMode: 0
   m_FollowOffset: {x: 0, y: 2.46, z: -13.29}
-  m_XDamping: 0.4
+  m_XDamping: 0
   m_YDamping: 1
   m_ZDamping: 1
   m_AngularDampingMode: 0
@@ -833,16 +839,16 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 3.5
   m_LookaheadIgnoreY: 0
-  m_HorizontalDamping: 0.5
-  m_VerticalDamping: 3.8
-  m_ScreenX: 0.5
+  m_HorizontalDamping: 0
+  m_VerticalDamping: 0
+  m_ScreenX: 0.4986486
   m_ScreenY: 0.5
-  m_DeadZoneWidth: 0
-  m_DeadZoneHeight: 0.42
+  m_DeadZoneWidth: 0.47
+  m_DeadZoneHeight: 0.67
   m_SoftZoneWidth: 0.8
   m_SoftZoneHeight: 0.8
   m_BiasX: 0
-  m_BiasY: -0.10600003
+  m_BiasY: -0.10599953
   m_CenterOnActivate: 1
 --- !u!114 &1071248384
 MonoBehaviour:
@@ -934,7 +940,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1246659507}
-  m_LocalRotation: {x: 0.072379194, y: -0.000000004290314, z: 3.113461e-10, w: 0.9973772}
+  m_LocalRotation: {x: 0.072379164, y: 0.0011223024, z: -0.00008144497, w: 0.99737656}
   m_LocalPosition: {x: -1.2972784, y: 3.0253978, z: -13.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []

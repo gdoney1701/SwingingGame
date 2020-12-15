@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 public class MomentumHandler : MonoBehaviour
 {
     public Vector3 currentVel;
-    bool swinging = false;
-    bool connected = false;
-    float radius;
+    public bool swinging = false;
+    public bool connected = false;
+    public float radius;
     float t = 0;
     float initAngle;
 
@@ -17,18 +17,15 @@ public class MomentumHandler : MonoBehaviour
     Vector2 playerMove;
     float inputDot = 0;
 
-    private void Awake()
-    {
-        playerMove = gameObject.GetComponent<PlayerMovement>().move;
+    public float maxSpeed = 20;
 
-    }
     public void StartSwinging(Vector3 inputVel, Vector2 inputRad, Vector3 target)
     {
 
         currentVel = inputVel;
         radius = inputRad.magnitude;
         GetComponent<Rigidbody>().useGravity = false;
-        //GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Rigidbody>().isKinematic = true;
         center = target;
 
         Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y+radius, 0);
@@ -46,14 +43,20 @@ public class MomentumHandler : MonoBehaviour
         {
 
             Vector3 travel = new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0) * radius;
-            if (radius > 1)
+            if (radius > 4)
             {
                 float preRad = radius;
-                radius -= currentVel.z * Time.deltaTime * 0.1f;
-                currentVel *= 1 + (preRad - radius);
+                radius -= Time.deltaTime * 0.1f;
+                if(currentVel.magnitude <= maxSpeed)
+                {
+                    currentVel *= 1 + (preRad - radius);
+                }
             }
 
-            angle += currentVel.z * Time.deltaTime / radius;
+            playerMove = gameObject.GetComponent<PlayerMovement>().move;
+            angle += currentVel.magnitude * Time.deltaTime / radius *1.5f;
+            //currentVel.x += playerMove.x;
+            //currentVel.y += playerMove.y;
 
             if (swinging)
             {

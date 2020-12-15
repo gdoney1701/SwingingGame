@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         controls.Movement.Jump.performed += ctx => Jump();
         controls.Movement.GroundPound.performed += ctx => Pound();
         controls.Movement.FireHook.started += ctx => HookShot();
+        controls.Movement.FireHook.canceled += ctx => EndSwing();
 
         controls.Movement.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         controls.Movement.Move.canceled += ctx => move = Vector2.zero;
@@ -80,9 +81,6 @@ public class PlayerMovement : MonoBehaviour
 
     void HookShot()
     {
-        //GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-        //hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(aim.x, aim.y, 0) * hookVel;
-        //hookAround = true;
         if (!hookAround)
         {
             for (int i = 0; i < localTargets.Count; i++)
@@ -99,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Debug.Log("Target Locked");
                     GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-                    hookSpawn.GetComponent<HookHandler>().attackVector = targetCheck.transform.position - gameObject.transform.position;
+                    hookSpawn.GetComponent<HookHandler>().attackVector = gameObject.transform.position - targetCheck.transform.position;
                     hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
                     hookAround = true;
                     //Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
@@ -138,10 +136,7 @@ public class PlayerMovement : MonoBehaviour
             momentum.x = playerBod.velocity.x + (speedMod*move.normalized.x);
             transform.Translate(m, Space.World);
             vel = m.x * Time.deltaTime;
-            momentum.z = new Vector2(momentum.x, momentum.y).magnitude;
-
-
-            //Debug.Log(Physics.gravity);
+            //momentum.z = new Vector2(momentum.x, momentum.y).magnitude;
         }
 
     }
@@ -194,6 +189,25 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             localTargets.Remove(targetDelta);
+        }
+    }
+
+    public void EndSwing()
+    {
+
+        Debug.Log("release");
+        MomentumHandler playerMomentum = GetComponent<MomentumHandler>();
+
+        if (playerMomentum.connected)
+        {
+            onSwing = false;
+            playerBod.velocity = playerMomentum.currentVel;
+            playerBod.useGravity = true;
+            playerBod.isKinematic = false;
+            playerMomentum.connected = false;
+            playerMomentum.swinging = false;
+            Destroy(hook);
+            hookAround = false;
         }
     }
 }
