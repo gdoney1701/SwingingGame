@@ -27,11 +27,18 @@ public class MomentumHandler : MonoBehaviour
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
         center = target;
+        Vector3 delta = new Vector3(0, 0, 0);
 
-        Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y+radius, 0);
+        delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
+        print(delta);
+        if(delta.x > 0 && delta.y < 0)
+        {
+
+        }
+        print(Mathf.Atan2(6.1f, 3.2f) / Mathf.PI);
         angle = Mathf.Atan2(delta.y, delta.x);
 
-        print("Angle is " + angle);
+        print("Angle is " + angle/Mathf.PI);
         inputDot = Vector3.Dot(inputVel.normalized, inputRad);
 
         connected = true;
@@ -54,7 +61,7 @@ public class MomentumHandler : MonoBehaviour
             }
 
             playerMove = gameObject.GetComponent<PlayerMovement>().move;
-            angle += currentVel.magnitude * Time.deltaTime / radius *1.5f;
+            angle += (currentVel.magnitude * Time.deltaTime / radius) *1.5f;
             //currentVel.x += playerMove.x;
             //currentVel.y += playerMove.y;
 
@@ -67,12 +74,18 @@ public class MomentumHandler : MonoBehaviour
                 Vector3 maintainSpeed = currentVel * Time.deltaTime;
                 transform.position = Vector3.Lerp(maintainSpeed + transform.position, center + travel, t);
                 t += Time.deltaTime;
-                if (t >= 1)
+                if (t >= 2)
                 {
                     swinging = true;
+                    t = 0;
                 }
             }
         }
 
+    }
+
+    public void ResetSpin()
+    {
+        t = 0;
     }
 }

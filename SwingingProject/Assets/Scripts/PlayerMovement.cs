@@ -22,13 +22,14 @@ public class PlayerMovement : MonoBehaviour
 
     public float downForce = -30;
 
-    public GameObject hook;
+    public GameObject hookFab;
     public int hookVel;
     public bool hookAround = false;
     public bool onSwing = false;
 
     public List<GameObject> localTargets = new List<GameObject>();
     public float targetArc;
+    GameObject currentHook;
 
     void Awake()
     {
@@ -59,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
             //gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
             Debug.Log("jumped");
             jumpOn++;
-            StartCoroutine(FallHandle());
+            StartCoroutine(FallHandle(false));
 
 
             if (jumpOn >= jumpMax)
@@ -96,9 +97,9 @@ public class PlayerMovement : MonoBehaviour
                 if (Vector2.Dot(move.normalized, headingV2) > cone)
                 {
                     Debug.Log("Target Locked");
-                    GameObject hookSpawn = Instantiate(hook, gameObject.transform.position, gameObject.transform.rotation);
-                    hookSpawn.GetComponent<HookHandler>().attackVector = gameObject.transform.position - targetCheck.transform.position;
-                    hookSpawn.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
+                    currentHook = Instantiate(hookFab, gameObject.transform.position, gameObject.transform.rotation);
+                    currentHook.GetComponent<HookHandler>().attackVector = gameObject.transform.position - targetCheck.transform.position;
+                    currentHook.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
                     hookAround = true;
                     //Debug.DrawRay(gameObject.transform.position, aim, Color.green, 20);
 
@@ -111,9 +112,12 @@ public class PlayerMovement : MonoBehaviour
         }
         
     }
-    IEnumerator FallHandle()
+    IEnumerator FallHandle(bool offHook)
     {
-        yield return new WaitForSeconds(.5f);
+        if (!offHook)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
         playerBod.drag = 0;
         Physics.gravity = new Vector3(0, -30, 0);
     }
@@ -194,20 +198,28 @@ public class PlayerMovement : MonoBehaviour
 
     public void EndSwing()
     {
-
-        Debug.Log("release");
-        MomentumHandler playerMomentum = GetComponent<MomentumHandler>();
-
-        if (playerMomentum.connected)
+        if (hookAround)
         {
-            onSwing = false;
-            playerBod.velocity = playerMomentum.currentVel;
-            playerBod.useGravity = true;
-            playerBod.isKinematic = false;
-            playerMomentum.connected = false;
-            playerMomentum.swinging = false;
-            Destroy(hook);
-            hookAround = false;
+            Debug.Log("release");
+            MomentumHandler playerMomentum = GetComponent<MomentumHandler>();
+
+            if (playerMomentum.connected)
+            {
+                onSwing = false;
+                playerBod.velocity = playerMomentum.currentVel;
+                playerBod.useGravity = true;
+                playerBod.isKinematic = false;
+                playerMomentum.connected = false;
+                playerMomentum.swinging = false;
+                Destroy(currentHook);
+                hookAround = false;
+                StartCoroutine(FallHandle(true));
+            }
+            else
+            {
+                Destroy(currentHook);
+                hookAround = false;
+            }
         }
     }
 }
