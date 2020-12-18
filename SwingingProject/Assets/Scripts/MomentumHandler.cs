@@ -31,10 +31,7 @@ public class MomentumHandler : MonoBehaviour
 
         delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
         print(delta);
-        if(delta.x > 0 && delta.y < 0)
-        {
 
-        }
         print(Mathf.Atan2(6.1f, 3.2f) / Mathf.PI);
         angle = Mathf.Atan2(delta.y, delta.x);
 
@@ -49,7 +46,7 @@ public class MomentumHandler : MonoBehaviour
         if (connected)
         {
 
-            Vector3 travel = new Vector3(Mathf.Sin(angle), Mathf.Cos(angle), 0) * radius;
+            Vector3 travel = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
             if (radius > 4)
             {
                 float preRad = radius;
@@ -74,7 +71,7 @@ public class MomentumHandler : MonoBehaviour
                 Vector3 maintainSpeed = currentVel * Time.deltaTime;
                 transform.position = Vector3.Lerp(maintainSpeed + transform.position, center + travel, t);
                 t += Time.deltaTime;
-                if (t >= 2)
+                if (t >= 1)
                 {
                     swinging = true;
                     t = 0;

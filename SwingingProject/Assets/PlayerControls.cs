@@ -57,6 +57,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""TestSpawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc7b0aba-daef-41a9-8441-a788a3bdab3f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -114,6 +122,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""GroundPound"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e211edf-b00a-4c9b-8386-e176365ea5ab"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TestSpawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -127,6 +146,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Movement_Jump = m_Movement.FindAction("Jump", throwIfNotFound: true);
         m_Movement_FireHook = m_Movement.FindAction("FireHook", throwIfNotFound: true);
         m_Movement_GroundPound = m_Movement.FindAction("GroundPound", throwIfNotFound: true);
+        m_Movement_TestSpawn = m_Movement.FindAction("TestSpawn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -181,6 +201,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Movement_Jump;
     private readonly InputAction m_Movement_FireHook;
     private readonly InputAction m_Movement_GroundPound;
+    private readonly InputAction m_Movement_TestSpawn;
     public struct MovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -190,6 +211,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Movement_Jump;
         public InputAction @FireHook => m_Wrapper.m_Movement_FireHook;
         public InputAction @GroundPound => m_Wrapper.m_Movement_GroundPound;
+        public InputAction @TestSpawn => m_Wrapper.m_Movement_TestSpawn;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +236,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @GroundPound.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
                 @GroundPound.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
                 @GroundPound.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnGroundPound;
+                @TestSpawn.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
+                @TestSpawn.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
+                @TestSpawn.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -233,6 +258,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @GroundPound.started += instance.OnGroundPound;
                 @GroundPound.performed += instance.OnGroundPound;
                 @GroundPound.canceled += instance.OnGroundPound;
+                @TestSpawn.started += instance.OnTestSpawn;
+                @TestSpawn.performed += instance.OnTestSpawn;
+                @TestSpawn.canceled += instance.OnTestSpawn;
             }
         }
     }
@@ -244,5 +272,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnFireHook(InputAction.CallbackContext context);
         void OnGroundPound(InputAction.CallbackContext context);
+        void OnTestSpawn(InputAction.CallbackContext context);
     }
 }
