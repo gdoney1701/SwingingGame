@@ -58,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
 
             playerBod.velocity = new Vector3(vel/2, jumpRange, 0);
             //gameObject.GetComponent<Rigidbody>().AddForce(transform.up * jumpRange);
-            Debug.Log("jumped");
             jumpOn++;
             StartCoroutine(FallHandle(false));
 
@@ -96,7 +95,6 @@ public class PlayerMovement : MonoBehaviour
 
                 if (Vector2.Dot(move.normalized, headingV2) > cone)
                 {
-                    Debug.Log("Target Locked");
                     currentHook = Instantiate(hookFab, gameObject.transform.position, gameObject.transform.rotation);
                     currentHook.GetComponent<HookHandler>().attackVector = gameObject.transform.position - targetCheck.transform.position;
                     currentHook.GetComponent<Rigidbody>().velocity = new Vector3(headingV2.x, headingV2.y, 0) * hookVel;
@@ -175,7 +173,6 @@ public class PlayerMovement : MonoBehaviour
         onGround = true;
         jumpOn = 0;
         anotherJump = true;
-        Debug.Log("Wompf");
         playerBod.drag = 2;
         ResetGravity();
     }
@@ -188,7 +185,6 @@ public class PlayerMovement : MonoBehaviour
         if (entering)
         {
             localTargets.Add(targetDelta);
-            Debug.Log(localTargets);
         }
         else
         {
@@ -200,7 +196,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (hookAround)
         {
-            Debug.Log("release");
             MomentumHandler playerMomentum = GetComponent<MomentumHandler>();
 
             if (playerMomentum.connected)
