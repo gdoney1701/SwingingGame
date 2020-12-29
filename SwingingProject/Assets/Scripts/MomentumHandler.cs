@@ -21,6 +21,7 @@ public class MomentumHandler : MonoBehaviour
     public float zoomDistance = 0;
     float initRad;
     bool zooming;
+    public Vector3 releaseVector;
     
 
     public void StartSwinging(Vector3 inputVel, Vector2 inputRad, Vector3 target, float minRad)
@@ -77,6 +78,7 @@ public class MomentumHandler : MonoBehaviour
 
             playerMove = gameObject.GetComponent<PlayerMovement>().move;
             angle += (currentVel.magnitude * Time.deltaTime / radius) * 1.5f;
+            releaseVector = (center + travel)- transform.position;
             transform.position = center + travel;
 
             }

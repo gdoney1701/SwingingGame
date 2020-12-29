@@ -201,11 +201,12 @@ public class PlayerMovement : MonoBehaviour
             if (playerMomentum.connected)
             {
                 onSwing = false;
-                playerBod.velocity = playerMomentum.currentVel;
                 playerBod.useGravity = true;
                 playerBod.isKinematic = false;
                 playerMomentum.connected = false;
                 playerMomentum.swinging = false;
+                playerBod.velocity = playerMomentum.currentVel.magnitude * playerMomentum.releaseVector.normalized;
+                Debug.Log(playerBod.velocity);
                 Destroy(currentHook);
                 hookAround = false;
                 StartCoroutine(FallHandle(true));

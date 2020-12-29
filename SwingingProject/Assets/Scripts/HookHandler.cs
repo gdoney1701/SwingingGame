@@ -16,8 +16,7 @@ public class HookHandler : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player.GetComponent<PlayerMovement>().onSwing = true;
         float minRad = impactDetection(hingePoint.transform.position);
-        Debug.Log(minRad);
-        Debug.Log(attackVector.magnitude);
+        Debug.Log(player.GetComponent<Rigidbody>().velocity);
         player.GetComponent<MomentumHandler>().StartSwinging(player.GetComponent<PlayerMovement>().momentum, attackVector, 
             collision.transform.position, minRad);
 
