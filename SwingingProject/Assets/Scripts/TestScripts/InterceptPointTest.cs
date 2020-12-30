@@ -21,9 +21,7 @@ public class InterceptPointTest : MonoBehaviour
         print("Understood");
         Vector3 delta = gameObject.transform.position - target.transform.position;
         float radius = delta.magnitude;
-        print(delta);
         float angle = Mathf.Atan2(delta.y, delta.x);
-        print("Angle is " + angle / Mathf.PI);
         Vector3 travel = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
         Instantiate(clone, travel, gameObject.transform.rotation);
         create = false;

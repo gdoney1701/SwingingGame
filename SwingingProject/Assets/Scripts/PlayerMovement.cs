@@ -206,7 +206,6 @@ public class PlayerMovement : MonoBehaviour
                 playerMomentum.connected = false;
                 playerMomentum.swinging = false;
                 playerBod.velocity = playerMomentum.currentVel.magnitude * playerMomentum.releaseVector.normalized;
-                Debug.Log(playerBod.velocity);
                 Destroy(currentHook);
                 hookAround = false;
                 StartCoroutine(FallHandle(true));

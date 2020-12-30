@@ -22,6 +22,8 @@ public class MomentumHandler : MonoBehaviour
     float initRad;
     bool zooming;
     public Vector3 releaseVector;
+
+    public int directionMod = 1;
     
 
     public void StartSwinging(Vector3 inputVel, Vector2 inputRad, Vector3 target, float minRad)
@@ -47,8 +49,22 @@ public class MomentumHandler : MonoBehaviour
         delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
         angle = Mathf.Atan2(delta.y, delta.x);
         inputDot = Vector3.Dot(inputVel.normalized, inputRad);
-
+        DirectionHandler();
         connected = true;
+    }
+    void DirectionHandler()
+    {
+        Vector3 toCenter = transform.position - center;
+        Vector3 perpVel = new Vector3(currentVel.y, -currentVel.x, 0);
+        Debug.Log(Vector3.Dot(perpVel, toCenter));
+        if(Vector3.Dot(perpVel,toCenter) > 0)
+        {
+            directionMod = 1;
+        }
+        else
+        {
+            directionMod = -1;
+        }
     }
 
     private void Update()
@@ -77,7 +93,7 @@ public class MomentumHandler : MonoBehaviour
             }
 
             playerMove = gameObject.GetComponent<PlayerMovement>().move;
-            angle += (currentVel.magnitude * Time.deltaTime / radius) * 1.5f;
+            angle += (currentVel.magnitude * Time.deltaTime / radius) * (1.5f*directionMod);
             releaseVector = (center + travel)- transform.position;
             transform.position = center + travel;
 
