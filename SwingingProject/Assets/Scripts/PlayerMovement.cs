@@ -20,9 +20,10 @@ public class PlayerMovement : MonoBehaviour
     float vel;
     public Rigidbody playerBod;
 
-    public float downForce = -30;
+    public float downForceMod = -30;
 
     public GameObject hookFab;
+    public GameObject impactFab;
     public int hookVel;
     public bool hookAround = false;
     public bool onSwing = false;
@@ -30,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     public List<GameObject> localTargets = new List<GameObject>();
     public float targetArc;
     GameObject currentHook;
+    bool striking = false;
 
     void Awake()
     {
@@ -44,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
         controls.Movement.Move.canceled += ctx => move = Vector2.zero;
 
         controls.Movement.Aim.performed += ctx => aim = ctx.ReadValue<Vector2>();
+        controls.Movement.Strike.started += ctx => striking = true;
+        controls.Movement.Strike.canceled += ctx => striking = false;
         //controls.Movement.Aim.canceled += ctx => aim = Vector2.zero;
 
         
@@ -75,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!onGround && !onSwing)
         {
-            playerBod.velocity = new Vector3(0, downForce, 0);
+            playerBod.velocity = new Vector3(0, downForceMod*playerBod.velocity.magnitude, 0);
         }
     }
 
@@ -156,7 +160,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Platforms"))
         {
+            Debug.Log(playerBod.velocity);
+            if (striking)
+            {
+                ImpactZone();
+            }
             ResetGround();
+
         }
 
     }
@@ -179,6 +189,13 @@ public class PlayerMovement : MonoBehaviour
     void ResetGravity()
     {
         Physics.gravity = new Vector3(0, -20, 0);
+    }
+    void ImpactZone()
+    {
+        GameObject revealSphere = Instantiate(impactFab, gameObject.transform.position, transform.rotation);
+        float scaleMod = Mathf.Sqrt(Mathf.Abs(playerBod.velocity.magnitude));
+        Debug.Log(playerBod.velocity);
+        revealSphere.GetComponent<ImpactBehavior>().initGrow(scaleMod);
     }
     public void targetHandler(bool entering, GameObject targetDelta)
     {

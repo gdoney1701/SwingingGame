@@ -65,6 +65,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Strike"",
+                    ""type"": ""Button"",
+                    ""id"": ""999e5e0c-280a-4488-8a84-f13cf8b580e9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -133,6 +141,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""TestSpawn"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cc0960ae-f3bb-4deb-8e51-94e09eb6da7d"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Strike"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -147,6 +166,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Movement_FireHook = m_Movement.FindAction("FireHook", throwIfNotFound: true);
         m_Movement_GroundPound = m_Movement.FindAction("GroundPound", throwIfNotFound: true);
         m_Movement_TestSpawn = m_Movement.FindAction("TestSpawn", throwIfNotFound: true);
+        m_Movement_Strike = m_Movement.FindAction("Strike", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -202,6 +222,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Movement_FireHook;
     private readonly InputAction m_Movement_GroundPound;
     private readonly InputAction m_Movement_TestSpawn;
+    private readonly InputAction m_Movement_Strike;
     public struct MovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -212,6 +233,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @FireHook => m_Wrapper.m_Movement_FireHook;
         public InputAction @GroundPound => m_Wrapper.m_Movement_GroundPound;
         public InputAction @TestSpawn => m_Wrapper.m_Movement_TestSpawn;
+        public InputAction @Strike => m_Wrapper.m_Movement_Strike;
         public InputActionMap Get() { return m_Wrapper.m_Movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -239,6 +261,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @TestSpawn.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
                 @TestSpawn.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
                 @TestSpawn.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnTestSpawn;
+                @Strike.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnStrike;
+                @Strike.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnStrike;
+                @Strike.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnStrike;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -261,6 +286,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @TestSpawn.started += instance.OnTestSpawn;
                 @TestSpawn.performed += instance.OnTestSpawn;
                 @TestSpawn.canceled += instance.OnTestSpawn;
+                @Strike.started += instance.OnStrike;
+                @Strike.performed += instance.OnStrike;
+                @Strike.canceled += instance.OnStrike;
             }
         }
     }
@@ -273,5 +301,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnFireHook(InputAction.CallbackContext context);
         void OnGroundPound(InputAction.CallbackContext context);
         void OnTestSpawn(InputAction.CallbackContext context);
+        void OnStrike(InputAction.CallbackContext context);
     }
 }

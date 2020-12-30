@@ -56,7 +56,6 @@ public class MomentumHandler : MonoBehaviour
     {
         Vector3 toCenter = transform.position - center;
         Vector3 perpVel = new Vector3(currentVel.y, -currentVel.x, 0);
-        Debug.Log(Vector3.Dot(perpVel, toCenter));
         if(Vector3.Dot(perpVel,toCenter) > 0)
         {
             directionMod = 1;
