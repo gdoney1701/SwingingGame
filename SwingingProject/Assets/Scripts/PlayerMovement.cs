@@ -160,7 +160,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Platforms"))
         {
-            Debug.Log(playerBod.velocity);
             if (striking)
             {
                 ImpactZone();
