@@ -11,19 +11,21 @@ public class MomentumHandler : MonoBehaviour
     public float radius;
     float t = 0;
     float initAngle;
+    Vector3 initVel;
+    float initRad;
 
     public float angle;
     Vector3 center;
-    Vector2 playerMove;
     float inputDot = 0;
 
-    public float maxSpeed = 20;
+    public float maxSpeed = 40;
     public float zoomDistance = 0;
-    float initRad;
     bool zooming;
     public Vector3 releaseVector;
 
     public int directionMod = 1;
+    public float thresholdVel = 15f;
+    bool accelerateToThreshold = false;
     
 
     public void StartSwinging(Vector3 inputVel, Vector2 inputRad, Vector3 target, float minRad)
@@ -31,23 +33,27 @@ public class MomentumHandler : MonoBehaviour
 
         currentVel = inputVel;
         radius = inputRad.magnitude;
+        initRad = radius;
         if(minRad < radius)
         {
             zoomDistance = minRad;
             zooming = true;
-            initRad = inputRad.magnitude;
         }
         else
         {
             zooming = false;
         }
+        if(currentVel.magnitude <= thresholdVel)
+        {
+            accelerateToThreshold = true;
+            initVel = inputVel;
+        }
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().isKinematic = true;
         center = target;
-        Vector3 delta = new Vector3(0, 0, 0);
-
-        delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
+        Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
         angle = Mathf.Atan2(delta.y, delta.x);
+        initAngle = angle;
         inputDot = Vector3.Dot(inputVel.normalized, inputRad);
         DirectionHandler();
         connected = true;
@@ -70,28 +76,50 @@ public class MomentumHandler : MonoBehaviour
     {
         if (connected)
         {
-            if(zooming)
-            {
-                radius = Mathf.Lerp(initRad, zoomDistance-1, t);
-                t += Time.deltaTime * 5;
-                if (t >= 1f)
+            //if(zooming)
+            //{
+            //    radius = Mathf.Lerp(initRad, zoomDistance-1, t);
+            //    t += Time.deltaTime * 5;
+            //    if (t >= 1f)
+            //    {
+            //        zooming = false;
+            //        t = 0;
+            //    }
+            //}
+            if (accelerateToThreshold)
+            { 
+                currentVel = Vector3.Lerp(initVel, new Vector3(thresholdVel, 0, 0), AngleFraction());
+                if(AngleFraction() >= 1)
                 {
-                    zooming = false;
-                    t = 0;
+                    accelerateToThreshold = false;
                 }
             }
             Vector3 travel = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
-            if (radius > 4 && !zooming)
+            if (radius > 2 && !accelerateToThreshold)
             {
                 float preRad = radius;
-                radius -= Time.deltaTime * 0.1f;
+                if (zooming)
+                {
+                    radius = Mathf.Lerp(initRad, zoomDistance - 1, t);
+                    t += Time.deltaTime * 5;
+                    if (t >= 1f)
+                    {
+                        zooming = false;
+                        t = 0;
+                    }
+                }
+                else
+                {
+                    radius -= Time.deltaTime * 0.2f;
+                }
                 if (currentVel.magnitude <= maxSpeed)
                 {
-                    currentVel *= 1 + (preRad - radius);
+                    currentVel *= 1.5f + (preRad - radius);
                 }
+            }else if(currentVel.magnitude < maxSpeed)
+            {
+                currentVel *= 1.5f;
             }
-
-            playerMove = gameObject.GetComponent<PlayerMovement>().move;
             angle += (currentVel.magnitude * Time.deltaTime / radius) * (1.5f*directionMod);
             releaseVector = (center + travel)- transform.position;
             transform.position = center + travel;
@@ -103,5 +131,11 @@ public class MomentumHandler : MonoBehaviour
     public void ResetSpin()
     {
         t = 0;
+    }
+    float AngleFraction()
+    {
+        float angFrac = (angle - initAngle) / (2 * Mathf.PI);
+        return angFrac;
+
     }
 }
