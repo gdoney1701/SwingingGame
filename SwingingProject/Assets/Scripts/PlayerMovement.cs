@@ -221,9 +221,11 @@ public class PlayerMovement : MonoBehaviour
                 playerBod.isKinematic = false;
                 playerMomentum.connected = false;
                 playerMomentum.swinging = false;
-                playerBod.velocity = playerMomentum.currentVel.magnitude * playerMomentum.releaseVector.normalized;
+                playerBod.velocity = playerMomentum.currentVel.magnitude * playerMomentum.releaseVector.normalized*1.5f;
                 Destroy(currentHook);
                 hookAround = false;
+                jumpOn = 0;
+                anotherJump = true;
                 StartCoroutine(FallHandle(true));
             }
             else

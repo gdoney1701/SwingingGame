@@ -48,8 +48,14 @@ public class MomentumHandler : MonoBehaviour
             accelerateToThreshold = true;
             initVel = inputVel;
         }
-        GetComponent<Rigidbody>().useGravity = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+        else
+        {
+            accelerateToThreshold = false;
+        }
+        Rigidbody momentumBod = GetComponent<Rigidbody>();
+        momentumBod.useGravity = false;
+        momentumBod.isKinematic = true;
+        momentumBod.drag = 0f;
         center = target;
         Vector3 delta = gameObject.transform.position - new Vector3(target.x, target.y, 0);
         angle = Mathf.Atan2(delta.y, delta.x);
