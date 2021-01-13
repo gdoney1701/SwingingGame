@@ -38,15 +38,6 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - Vector1_247A12D2: 1
-    - Vector1_263C38BE: 1
-    - Vector1_6A6525B4: 0
-    - Vector1_77861AF1: 0
-    - Vector1_9E5CD266: 1
-    - Vector1_A937C376: 1
-    - Vector1_D1465A31: 1
-    - Vector1_E8B625E: 1
-    - Vector1_FA1291E: 1
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
@@ -62,13 +53,13 @@ Material:
     - _ReceivesSSR: 1
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
-    - _Shockwave_Distance: 1
+    - _Shockwave_Distance: 3.33
     - _Shockwave_Enabled: 0
-    - _Shockwave_Intensity: 0
+    - _Shockwave_Intensity: 5
     - _Shockwave_Material: 1
-    - _Shockwave_MaxDistance: 0
-    - _Shockwave_Smoothing: 1
-    - _Shockwave_Width: 1
+    - _Shockwave_MaxDistance: 20
+    - _Shockwave_Smoothing: 5
+    - _Shockwave_Width: 2
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 8
@@ -93,12 +84,9 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - Color_7390D071: {r: 0, g: 0, b: 0, a: 0}
-    - Color_C26FC666: {r: 0, g: 0, b: 0, a: 0}
-    - Vector3_5ABE4198: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.22846209, g: 0.24696498, b: 0.3207547, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
-    - _Emission: {r: 0, g: 0, b: 0, a: 0}
+    - _Emission: {r: 0.8396226, g: 0.48391172, b: 0.1544589, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _Shockwave_Position: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
