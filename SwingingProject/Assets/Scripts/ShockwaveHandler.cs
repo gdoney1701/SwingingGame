@@ -9,41 +9,39 @@ public class ShockwaveHandler : MonoBehaviour
     bool pulseActive = false;
     public float pulseSpeed = 2f;
     float t = 0;
+    public float minimumImpact = 5f;
     private void OnCollisionEnter(Collision collision)
     {
         affectedShaders.Clear();
-        Renderer shadertoWork = collision.collider.GetComponent<Renderer>();
-        Debug.Log("bonk");
-        int layerMask = 1 << 9;
-        Collider[] collisionPlanes = Physics.OverlapSphere(transform.position, effectMaxDistance, layerMask);
         Vector3 impactVel = collision.relativeVelocity;
-        float shockwaveIntensity = impactVel.magnitude/2;
-        foreach(Collider groundObject in collisionPlanes)
+        //Debug.Log(impactVel.magnitude);
+        if(impactVel.magnitude >= minimumImpact)
         {
-            Renderer localShader = groundObject.GetComponent<Renderer>();
-            affectedShaders.Add(localShader);
-            localShader.material.SetFloat("_Shockwave_Distance", 0);
-            localShader.material.SetVector("_Shockwave_Position", transform.position);
-            localShader.material.SetFloat("_Shockwave_Enabled", 1);
-            localShader.material.SetFloat("_Shockwave_MaxDistance", effectMaxDistance);
-            localShader.material.SetFloat("_Shockwave_Intensity", shockwaveIntensity);
+            float shockwaveIntensity = impactVel.magnitude / 5;
+            effectMaxDistance += 3 * Mathf.Log(shockwaveIntensity);
+
+            int layerMask = 1 << 9;
+            Collider[] collisionPlanes = Physics.OverlapSphere(transform.position, effectMaxDistance, layerMask);
+            foreach (Collider groundObject in collisionPlanes)
+            {
+                Renderer localShader = groundObject.GetComponent<Renderer>();
+                affectedShaders.Add(localShader);
+                localShader.material.SetFloat("_Shockwave_Distance", 0);
+                localShader.material.SetVector("_Shockwave_Position", transform.position);
+                localShader.material.SetFloat("_Shockwave_Enabled", 1);
+                localShader.material.SetFloat("_Shockwave_MaxDistance", effectMaxDistance);
+                localShader.material.SetFloat("_Shockwave_Intensity", shockwaveIntensity);
+            }
+            pulseActive = true;
+            t = 0;
         }
-        pulseActive = true;
-        t = 0;
-
-
-    }
-
-    void InitiatePulse(Renderer groundPlane)
-    {
-        
     }
     private void Update()
     {
         if (pulseActive)
         {
             t += Time.deltaTime;
-            float movement = pulseSpeed*Time.deltaTime * Mathf.Exp(-2*t);
+            float movement = pulseSpeed/effectMaxDistance * Mathf.Exp(-t)+Time.deltaTime;
             float currentDistance = 0;
             foreach (Renderer shader in affectedShaders)
             {
