@@ -53,13 +53,13 @@ Material:
     - _ReceivesSSR: 1
     - _RenderQueueType: 1
     - _RequireSplitLighting: 0
-    - _Shockwave_Distance: 3.33
+    - _Shockwave_Distance: 5
     - _Shockwave_Enabled: 0
     - _Shockwave_Intensity: 5
     - _Shockwave_Material: 1
     - _Shockwave_MaxDistance: 20
-    - _Shockwave_Smoothing: 5
-    - _Shockwave_Width: 2
+    - _Shockwave_Smoothing: 3.58
+    - _Shockwave_Width: 1.07
     - _SrcBlend: 1
     - _StencilRef: 0
     - _StencilRefDepth: 8
