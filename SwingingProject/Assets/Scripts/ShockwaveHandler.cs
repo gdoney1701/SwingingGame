@@ -6,10 +6,17 @@ public class ShockwaveHandler : MonoBehaviour
 {
     public List<Renderer> affectedShaders;
     public float effectMaxDistance;
+    float maxDistDefault;
+
     bool pulseActive = false;
     public float pulseSpeed = 2f;
     float t = 0;
     public float minimumImpact = 5f;
+
+    private void Start()
+    {
+        maxDistDefault = effectMaxDistance;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         affectedShaders.Clear();
@@ -56,6 +63,7 @@ public class ShockwaveHandler : MonoBehaviour
                 pulseActive = false;
                 affectedShaders.Clear();
                 t = 0;
+                effectMaxDistance = maxDistDefault;
             }
 
 
